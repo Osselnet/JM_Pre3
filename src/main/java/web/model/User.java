@@ -11,25 +11,21 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User //implements UserDetails
+public class User implements UserDetails
 {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "age")
-    private long age;
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    @Column(name = "login")
+    private String login;
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "email")
+    private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> role;
@@ -45,13 +41,21 @@ public class User //implements UserDetails
     public User() {
     }
 
-    public User(String name, String password, long age) {
-        this.name = name;
+    public User(String login, String password, String email) {
+        this.login = login;
         this.password = password;
-        this.age = age;
+        this.email = email;
     }
 
-  /*  @Override
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<Role> rr = (Collection<Role>) role;
         return role;
@@ -64,7 +68,7 @@ public class User //implements UserDetails
 
     @Override
     public String getUsername() {
-        return name;
+        return login;
     }
 
     @Override
@@ -86,28 +90,24 @@ public class User //implements UserDetails
     public boolean isEnabled() {
         return true;
     }
-*/
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public long getAge() {
-        return age;
-    }
-
-    public void setAge(long age) {
-        this.age = age;
     }
 }
