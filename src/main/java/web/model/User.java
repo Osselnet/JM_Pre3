@@ -1,7 +1,9 @@
 package web.model;
 
+/*
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+*/
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -9,7 +11,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User //implements UserDetails
+{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,7 +51,7 @@ public class User implements UserDetails {
         this.age = age;
     }
 
-    @Override
+  /*  @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<Role> rr = (Collection<Role>) role;
         return role;
@@ -83,7 +86,7 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
+*/
     public Long getId() {
         return id;
     }

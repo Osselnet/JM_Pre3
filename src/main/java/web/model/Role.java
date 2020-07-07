@@ -1,12 +1,12 @@
 package web.model;
 
-import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "roles")
-public class Role implements GrantedAuthority
+public class Role //implements GrantedAuthority
 {
     @Id
     @Column(name = "id")
@@ -35,7 +35,7 @@ public class Role implements GrantedAuthority
         this.role = role;
     }
 
-    @Override
+    //@Override
     public String getAuthority() {
         return role;
     }
