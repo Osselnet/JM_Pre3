@@ -18,6 +18,17 @@ public class Role implements GrantedAuthority
     @Column(name = "role")
     private String role;
 
+    public boolean isInUser() {
+        return isInUser;
+    }
+
+    public void setInUser(boolean inUser) {
+        isInUser = inUser;
+    }
+
+    @Transient
+    private boolean isInUser;
+
     public Role() {
     }
 
@@ -37,7 +48,7 @@ public class Role implements GrantedAuthority
         this.role = role;
     }
 
-    //@Override
+    @Override
     public String getAuthority() {
         return role;
     }

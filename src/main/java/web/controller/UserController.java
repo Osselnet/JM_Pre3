@@ -1,76 +1,70 @@
 package web.controller;
 
 import javax.servlet.http.HttpServlet;
-import javax.validation.Valid;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import web.model.Role;
 import web.model.User;
-import web.repository.UserRepository;
+import web.service.UserService;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
 public class UserController extends HttpServlet {
-    
-    private final UserRepository userRepository;
+
+    private final UserService userService;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping("/login")
-    public String loginGet() {
-        return "login";
-    }
-
-    @GetMapping("/signup")
-    public String showSignUpForm(User user) {
-        return "add-user";
-    }
-    
-    @PostMapping("/adduser")
-    public String addUser(@Valid User user, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return "add-user";
-        }
-        
-        userRepository.save(user);
-        model.addAttribute("users", userRepository.findAll());
-        return "redirect:/admin";
-    }
-    
-    @GetMapping("/edit/{id}")
-    public String showUpdateForm(@PathVariable("id") long id, Model model) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        model.addAttribute("user", user);
-        return "update-user";
-    }
-    
-    @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable("id") long id, @Valid User user, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            user.setId(id);
-            return "update-user";
-        }
-        
-        userRepository.save(user);
-        model.addAttribute("users", userRepository.findAll());
-        return "redirect:/admin";
-    }
-    
-    @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable("id") long id, Model model) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        userRepository.delete(user);
-        model.addAttribute("users", userRepository.findAll());
+    @GetMapping(value = "admin")
+    public String usersGet(ModelMap model) {
+        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("roles", userService.getAllRoles());
         return "admin";
+    }
+
+    @PostMapping(value = "admin/add")
+    public String addPost(User user, String[] roleIds) {
+        user.setRole(userService.getRoles(roleIds));
+        userService.insert(user);
+        return "redirect:/admin";
+    }
+
+    @GetMapping(value = "admin/edit")
+    public String editGet(ModelMap model, @RequestParam("id") Long id) {
+        User user = userService.getUser(id);
+        model.addAttribute("user", user);
+        List<Role> roles = userService.getAllRoles();
+        roles.forEach(role -> role.setInUser(user.isRoleInUser(role)));
+        model.addAttribute("roles", roles);
+        return "admin/edit";
+    }
+
+    @PostMapping(value = "admin/edit")
+    public String editPost(User user, String[] roleIds) {
+        user.setRole(userService.getRoles(roleIds));
+        userService.update(user);
+        return "redirect:/admin";
+    }
+
+    @PostMapping(value = "admin/delete")
+    public String deletePost(@RequestParam("id") Long id) {
+        userService.deleteUser(id);
+        return "redirect:/admin";
+    }
+
+    @GetMapping(value = "user")
+    public String userGet(ModelMap modelMap, HttpSession httpSession) {
+        modelMap.addAttribute("user", httpSession.getAttribute("user"));
+        return "user";
     }
 }

@@ -8,9 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import web.dao.UserDao;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService
-{
-
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserDao userDao;
 

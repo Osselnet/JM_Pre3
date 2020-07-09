@@ -108,4 +108,8 @@ public class User implements UserDetails
     public void setId(Long id) {
         this.id = id;
     }
+
+    public boolean isRoleInUser(Role role) {
+        return this.role.stream().anyMatch(role1 -> role1.getId() == role.getId());
+    }
 }
