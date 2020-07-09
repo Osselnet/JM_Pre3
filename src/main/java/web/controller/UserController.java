@@ -1,5 +1,6 @@
 package web.controller;
 
+import javax.servlet.http.HttpServlet;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import web.model.User;
 import web.repository.UserRepository;
 
 @Controller
-public class UserController {
+@RequestMapping("/")
+public class UserController extends HttpServlet {
     
     private final UserRepository userRepository;
 
@@ -22,7 +25,12 @@ public class UserController {
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    
+
+    @GetMapping("/login")
+    public String loginGet() {
+        return "login";
+    }
+
     @GetMapping("/signup")
     public String showSignUpForm(User user) {
         return "add-user";
@@ -36,7 +44,7 @@ public class UserController {
         
         userRepository.save(user);
         model.addAttribute("users", userRepository.findAll());
-        return "redirect:/index";
+        return "redirect:/admin";
     }
     
     @GetMapping("/edit/{id}")
@@ -55,7 +63,7 @@ public class UserController {
         
         userRepository.save(user);
         model.addAttribute("users", userRepository.findAll());
-        return "redirect:/index";
+        return "redirect:/admin";
     }
     
     @GetMapping("/delete/{id}")
@@ -63,6 +71,6 @@ public class UserController {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         userRepository.delete(user);
         model.addAttribute("users", userRepository.findAll());
-        return "index";
+        return "admin";
     }
 }
