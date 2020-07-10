@@ -25,6 +25,11 @@ public class UserController extends HttpServlet {
         this.userService = userService;
     }
 
+    @GetMapping(value = "login")
+    public String loginGet() {
+        return "login";
+    }
+
     @GetMapping(value = "admin")
     public String usersGet(ModelMap model) {
         model.addAttribute("users", userService.getAllUsers());

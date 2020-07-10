@@ -15,8 +15,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserDetailsService userDetailsService; // сервис, с помощью которого тащим пользователя
-    private final SuccessUserHandler successUserHandler; // класс, в котором описана логика перенаправления пользователей по ролям
+    private final UserDetailsService userDetailsService;
+    private final SuccessUserHandler successUserHandler;
 
     public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, SuccessUserHandler successUserHandler) {
         this.userDetailsService = userDetailsService;
@@ -25,30 +25,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder()); // конфигурация для прохождения аутентификации
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                //страницы аутентификаци доступна всем
                 .antMatchers("/login").anonymous()
-                // защищенные URL
                 .antMatchers("/admin/**").access("hasAnyRole('ADMIN')")
                 .antMatchers("/user").access("hasAnyRole('USER')")
                 .anyRequest().authenticated();
-            //.and()
-                //.formLogin()  // Spring сам подставит свою логин форму
-                //.successHandler(successUserHandler); // подключаем наш SuccessHandler для перенеправления по ролям
-        http.formLogin()
-                // указываем страницу с формой логина
+         http.formLogin()
                 .loginPage("/login")
-                //указываем логику обработки при логине
                 .successHandler(successUserHandler)
                 .loginProcessingUrl("/login")
                 .usernameParameter("j_username")
                 .passwordParameter("j_password")
-                // даем доступ к форме логина всем
                 .permitAll();
         http.logout()
                 .permitAll()

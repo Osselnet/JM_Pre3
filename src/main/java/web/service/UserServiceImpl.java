@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService{
 
     private final UserDao userDao;
 
-    @Autowired
+    //@Autowired
     public UserServiceImpl(UserDao userDao) {this.userDao = userDao;}
 
     @Transactional(readOnly = true)

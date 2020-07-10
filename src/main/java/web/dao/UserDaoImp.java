@@ -1,6 +1,5 @@
 package web.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import web.model.Role;
 import web.model.User;
 import org.springframework.stereotype.Repository;
@@ -15,9 +14,8 @@ import java.util.Set;
 @Repository
 public class UserDaoImp implements UserDao {
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
-    @Autowired
     public UserDaoImp(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -48,7 +46,6 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<User> getAllUser() {
         TypedQuery<User> query = entityManager.createQuery("from User", User.class);
         return query.getResultList();
@@ -58,25 +55,23 @@ public class UserDaoImp implements UserDao {
     public User getUserById(long id) {
         TypedQuery<User> query = entityManager.createQuery("from User where id = :userId", User.class);
         query.setParameter("userId", id);
-        return (User) query.getSingleResult();
+        return query.getSingleResult();
     }
 
     @Override
     public User getUserByName(String name) {
         TypedQuery<User> query = entityManager.createQuery("from User where login = :userName", User.class);
         query.setParameter("userName", name);
-        return (User) query.getSingleResult();
+        return query.getSingleResult();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Role> readRole() {
         TypedQuery<Role> query = entityManager.createQuery("from Role", Role.class);
         return query.getResultList();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Set<Role> getRoles(String[] ids) {
         TypedQuery<Role> query = entityManager.createQuery("from Role where id = :id", Role.class);
         Set<Role> roles = new HashSet<>();
