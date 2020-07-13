@@ -12,7 +12,9 @@ import web.model.Role;
 import web.model.User;
 import web.service.UserService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/")
@@ -31,9 +33,15 @@ public class UserController extends HttpServlet {
     }
 
     @GetMapping(value = "admin")
-    public String usersGet(ModelMap model) {
-        model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("roles", userService.getAllRoles());
+    public String usersGet(ModelMap model, HttpSession httpSession) {
+        model.addAttribute("user", httpSession.getAttribute("user"));
+        List<User> allUsers = userService.getAllUsers();
+        model.addAttribute("users", allUsers);
+        List<Role> allRoles = userService.getAllRoles();
+        model.addAttribute("roles", allRoles);
+        Map<User, List<List<String>>> usersWithRoles = new HashMap<>();
+        allUsers.forEach(user -> usersWithRoles.put(user, userService.getUserRoles(allRoles, user)));
+        model.addAttribute("usersWithRoles", usersWithRoles);
         return "admin";
     }
 

@@ -7,6 +7,7 @@ import web.dao.UserDao;
 import web.model.Role;
 import web.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -52,4 +53,16 @@ public class UserServiceImpl implements UserService{
         userDao.delete(id);
     }
 
+    @Override
+    public List<List<String>> getUserRoles(List<Role> allRoles, User user) {
+        List<List<String>> newMapUp = new ArrayList<>();
+        allRoles.forEach(role -> {
+            List<String> newMap = new ArrayList<>();
+            newMap.add(String.valueOf(role.getId()));
+            newMap.add(role.getRole());
+            newMap.add(user.isRoleInUser(role) ? "true" : "false");
+            newMapUp.add(newMap);
+        });
+        return newMapUp;
+    }
 }
