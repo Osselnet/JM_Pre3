@@ -55,14 +55,14 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<List<String>> getUserRoles(List<Role> allRoles, User user) {
-        List<List<String>> newMapUp = new ArrayList<>();
+        List<List<String>> userRoles = new ArrayList<>();
         allRoles.forEach(role -> {
-            List<String> newMap = new ArrayList<>();
-            newMap.add(String.valueOf(role.getId()));
-            newMap.add(role.getRole());
-            newMap.add(user.isRoleInUser(role) ? "true" : "false");
-            newMapUp.add(newMap);
+            List<String> roles = new ArrayList<>();
+            roles.add(String.valueOf(role.getId()));
+            roles.add(role.getRole());
+            roles.add(user.isRoleInUser(role) ? "true" : "false");
+            userRoles.add(roles);
         });
-        return newMapUp;
+        return userRoles;
     }
 }

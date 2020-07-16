@@ -21,8 +21,8 @@ public class RestUserController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "users")
-    public Map<User, List<List<String>>> usersGet() {
+    @GetMapping
+    public Map<User, List<List<String>>> getUsers() {
         List<User> allUsers = userService.getAllUsers();
         List<Role> allRoles = userService.getAllRoles();
         Map<User, List<List<String>>> usersWithRoles = new HashMap<>();
@@ -30,22 +30,20 @@ public class RestUserController {
         return usersWithRoles;
     }
 
-    @PostMapping(value = "add")
-    public Map<User, String> addPost(@RequestBody User user) {
-        user.setRole(userService.getRoles(roleIds));
+    @PostMapping
+    public void addUser(@RequestBody User user, String[] roles) {
+        user.setRole(userService.getRoles(roles));
         userService.insert(user);
-        return "redirect:/admin";
     }
 
-    @PutMapping(value = "edit/{id}")
-    public String editPost(User user, String[] roleIds) {
-        user.setRole(userService.getRoles(roleIds));
+    @PutMapping
+    public void editUser(@RequestBody User user, String[] roles) {
+        user.setRole(userService.getRoles(roles));
         userService.update(user);
-        return "redirect:/admin";
     }
 
-    @DeleteMapping(value = "delete/{id}")
-    public void deletePost(@PathVariable Long id) {
+    @DeleteMapping(value = "{id}")
+    public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
 }
