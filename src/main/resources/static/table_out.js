@@ -3,7 +3,6 @@ const tr = $("<tr></tr>");
 const td = $("<td></td>");
 const select = $("<select disabled></select>").attr("name", "roleIds");
 const buttonGlobal = $("<button type='button' data-toggle='modal'></button>");
-
 let buttonEditUser;
 let buttonDeleteUser;
 let allUsers;
@@ -14,6 +13,7 @@ let addEmail = $("#addEmail");
 let addRoles = $("#addRoles");
 
 $(document).ready(function () {
+
     $.ajax("/rest", {
         dataType: "json",
         success: function (msg) {
@@ -28,8 +28,8 @@ $(document).ready(function () {
 
 
 function editUser() {
-    $.ajax("/rest", {
-        method: "put",
+    $.ajax("/rest/admin/edit", {
+        method: "post",
         data:
             {
                 user: JSON.stringify(
@@ -48,6 +48,7 @@ function editUser() {
             $("#password" + msg.id).text(msg.password);
             $("#email" + msg.id).text(msg.email);
             $("#select" + msg.id).children().remove().attr("size", msg.role.length);
+            // $("#select" + msg.id).attr("size", msg.role.length);
             msg.role.forEach(function (role) {
                 option.clone().text(role.role).appendTo($("#select" + msg.id));
             });
@@ -61,11 +62,12 @@ function editUser() {
 
 function editUserUnselectRoles() {
     $("[name=roleOption]").attr("selected", false);
+
 }
 
 function deleteUser() {
-    $.ajax("/rest", {
-        method: "delete",
+    $.ajax("/rest/admin/delete", {
+        method: "post",
         data: {id: $("#deleteModalUser").attr("value")},
         dataType: "text",
         success: function (msg) {
@@ -76,7 +78,7 @@ function deleteUser() {
 }
 
 function addUser() {
-    $.ajax("/rest", {
+    $.ajax("/rest/admin/add", {
         method: "post",
         data:
             {
