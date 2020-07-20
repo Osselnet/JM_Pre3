@@ -1,11 +1,15 @@
 package web.controller;
 
+import org.springframework.cglib.core.internal.LoadingCache;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import web.model.User;
 import web.model.UserRole;
 import web.service.UserService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/rest")
@@ -23,39 +27,21 @@ public class RestUserController {
     }
 
     @PostMapping
-    public User addUser(@RequestParam("user") User user, @RequestParam("roleIds") List<String> roles) {
-        String[] roleIdsFromList = new String[roles.size()];
-        for (int i = 0; i < roleIdsFromList.length; i++) {
-            roleIdsFromList[i] = roles.get(i);
-        }
-
-        user.setRole(userService.getRoles(roleIdsFromList));
+    public User addUser(@RequestBody UserRole userVichRoles) {
+        User user = new User(userVichRoles.getLogin(), userVichRoles.getPassword(), userVichRoles.getEmail());
+        user.setRole(userService.getRoles(userVichRoles.getRoles()));
         userService.insert(user);
         return user;
     }
 
-    /*   @PutMapping
-       public User editUser(@RequestParam("user") User user, @RequestParam("roleIds") List<String> roles) {
-           String[] roleIdsFromList = new String[roles.size()];
-           for (int i=0; i<roleIdsFromList.length; i++) {
-               roleIdsFromList[i] = roles.get(i);
-           }
-
-           user.setRole(userService.getRoles(roleIdsFromList));
-           userService.update(user);
-           return user;
-       }
-   */
     @PutMapping
-    //public User editUser(@RequestBody UserRole users) {
-    //public User editUser(@RequestBody User user) {
-    public UserRole editUser(@RequestBody UserRole user) {
-/*
-        String[] roleIdsFromList = {roleIds};
-
-        user.setRole(userService.getRoles(roleIdsFromList));
-*/
-        //userService.update(user);
+    public User editUser(@RequestBody UserRole userVichRoles) {
+        User user = userService.getUser(userVichRoles.getId());
+        user.setLogin(userVichRoles.getLogin());
+        user.setPassword(userVichRoles.getPassword());
+        user.setEmail(userVichRoles.getEmail());
+        user.setRole(userService.getRoles(userVichRoles.getRoles()));
+        userService.update(user);
         return user;
     }
 

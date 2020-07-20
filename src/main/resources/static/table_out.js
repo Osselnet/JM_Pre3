@@ -7,10 +7,6 @@ let buttonEditUser;
 let buttonDeleteUser;
 let allUsers;
 let tbody = $("#users");
-let addLogin = $("#addLogin");
-let addPassword = $("#addPassword");
-let addEmail = $("#addEmail");
-let addRoles = $("#addRoles");
 
 $(document).ready(function () {
 
@@ -26,25 +22,22 @@ $(document).ready(function () {
     })
 })
 
-
 function editUser() {
+    var user = {}
+    user["id"] = $("#editModalUser").attr("value");
+    user["login"] = $("#editLogin").val();
+    user["password"] = $("#editPassword").val();
+    user["email"] = $("#editEmail").val();
+    user["roles"] = $("#roles").val();
     $.ajax("/rest", {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
         method: "put",
-        data:
-            {
-                user: JSON.stringify(
-                    {
-                        //id: $("#editModalUser").attr("value"),
-                        login: $("#editLogin").val(),
-                        password: $("#editPassword").val(),
-                        email: $("#editEmail").val()
-                        //role: $("#roles").val()
-                    })
-                //roleIds: JSON.stringify($("#roles").val())
-            },
+        data: JSON.stringify(user),
         dataType: "json",
         success: function (msg) {
-
             $("#login" + msg.id).text(msg.login);
             $("#password" + msg.id).text(msg.password);
             $("#email" + msg.id).text(msg.email);
@@ -76,18 +69,18 @@ function deleteUser() {
 }
 
 function addUser() {
+    var user = {}
+    user["login"] = $("#addLogin").val();
+    user["password"] = $("#addPassword").val();
+    user["email"] = $("#addEmail").val();
+    user["roles"] = $("#addRoles").val();
     $.ajax("/rest", {
         method: "post",
-        data:
-            {
-                user: JSON.stringify(
-                    {
-                        login: addLogin.val(),
-                        password: addPassword.val(),
-                        email: addEmail.val()
-                    }),
-                roleIds: JSON.stringify(addRoles.val())
-            },
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(user),
         dataType: "json",
         success: function (msg) {
             addUserInTableBody(msg);
