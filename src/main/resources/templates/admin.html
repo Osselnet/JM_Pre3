@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">-->
+    <link href="webjars/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+
     <title>admin</title>
 </head>
-<body>
+<body style="background-color: #f4f4f4">
+
 <nav class="navbar navbar-dark  bg-dark flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">
         <span>User "</span><span th:text="${user.login}"/><span>" with role </span><span th:text="${user.role.toString()}"></span>
@@ -80,29 +83,7 @@
                                                 <th>delete</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr th:data-id="${entry.getKey().id}" th:each="entry: ${usersWithRoles.entrySet()}">
-                                                <td th:text="${entry.getKey().login}" />
-                                                <td th:text="${entry.getKey().password}" />
-                                                <td th:text="${entry.getKey().email}" />
-                                                <td>
-                                                    <select name="roleIds" th:size="${entry.getKey().role.size()}" multiple disabled>
-                                                        <option th:each="role: ${entry.getKey().role}" th:value="${role.id}" th:text="${role.role}"></option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <button th:value="${entry.getKey().id}" type="button" class="btn btn-primary" data-toggle="modal" th:data-target="'#modalEdit'+${entry.getKey().id}" name="id">
-                                                        edit
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button th:value="${entry.getKey().id}" type="button" class="btn btn-danger" data-toggle="modal" th:data-target="'#modalDelete'+${entry.getKey().id}" name="id">
-                                                        delete
-                                                    </button>
-                                                </td>
-
-                                            </tr>
-
+                                            <tbody id="users">
                                             </tbody>
                                         </table>
 
@@ -216,7 +197,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalEditLabel">Edit</h5>
-                <button type="button" class="close" data-dismiss="modal"        aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -303,17 +284,18 @@
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-        crossorigin="anonymous"></script>
 
+
+<script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+<script src="webjars/jquery-ui/1.11.1/jquery-ui.min.js"></script>
+<script src="webjars/popper.js/1.16.0/popper.min.js"></script>
+<script src="webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<!--
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+-->
 <script src="table_out.js"></script>
-
 </body>
 </html>
+
+
