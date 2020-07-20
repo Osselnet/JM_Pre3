@@ -1,7 +1,9 @@
 package web.controller;
 
 import org.springframework.cglib.core.internal.LoadingCache;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.model.User;
 import web.model.UserRole;
@@ -22,33 +24,33 @@ public class RestUserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
+    public @ResponseBody List<User> getUsers() {
         return userService.getAllUsers();
     }
 
     @PostMapping
-    public User addUser(@RequestBody UserRole userVichRoles) {
+    public ResponseEntity<String> addUser(@RequestBody UserRole userVichRoles) {
         User user = new User(userVichRoles.getLogin(), userVichRoles.getPassword(), userVichRoles.getEmail());
         user.setRole(userService.getRoles(userVichRoles.getRoles()));
         userService.insert(user);
-        return user;
+        return ResponseEntity.ok("User added.");
     }
 
     @PutMapping
-    public User editUser(@RequestBody UserRole userVichRoles) {
+    public ResponseEntity<String> editUser(@RequestBody UserRole userVichRoles) {
         User user = userService.getUser(userVichRoles.getId());
         user.setLogin(userVichRoles.getLogin());
         user.setPassword(userVichRoles.getPassword());
         user.setEmail(userVichRoles.getEmail());
         user.setRole(userService.getRoles(userVichRoles.getRoles()));
         userService.update(user);
-        return user;
+        return ResponseEntity.ok("User changed.");
     }
 
-
     @DeleteMapping
-    public Long deleteUser(@RequestParam("id") Long id) {
+    public ResponseEntity<String> deleteUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
-        return id;
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Long.toString(id));
     }
 }
